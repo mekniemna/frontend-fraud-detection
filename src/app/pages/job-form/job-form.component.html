@@ -4,52 +4,32 @@
       <p class="text-3xl font-bold text-gray-900 dark:text-white mb-2 animate-fade-in-out">{{ currentTagline }}</p>
     </div>
 
-    <div class="card mb-8">
-      <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white">Select an option</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <button
-          (click)="selectedOption = 'form'"
-          [class.bg-primary]="selectedOption === 'form'"
-          [class.bg-white]="selectedOption !== 'form'"
-          [class.dark:bg-dark-light]="selectedOption !== 'form'"
-          class="p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200 hover:shadow-md"
-        >
-          <div class="flex items-center">
-            <div class="mr-4 text-primary">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-            </div>
-            <div>
-              <h3 class="text-lg font-medium" [class.text-white]="selectedOption === 'form'" [class.text-gray-800]="selectedOption !== 'form'" [class.dark:text-white]="selectedOption !== 'form'">Add Job Manually</h3>
-              <p class="text-sm" [class.text-gray-100]="selectedOption === 'form'" [class.text-gray-600]="selectedOption !== 'form'" [class.dark:text-gray-300]="selectedOption !== 'form'">Enter job details manually through a form</p>
-            </div>
-          </div>
-        </button>
-
-        <button
-          (click)="selectedOption = 'scraper'"
-          [class.bg-primary]="selectedOption === 'scraper'"
-          [class.bg-white]="selectedOption !== 'scraper'"
-          [class.dark:bg-dark-light]="selectedOption !== 'scraper'"
-          class="p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200 hover:shadow-md"
-        >
-          <div class="flex items-center">
-            <div class="mr-4 text-primary">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-              </svg>
-            </div>
-            <div>
-              <h3 class="text-lg font-medium" [class.text-white]="selectedOption === 'scraper'" [class.text-gray-800]="selectedOption !== 'scraper'" [class.dark:text-white]="selectedOption !== 'scraper'">Use Job Scraper</h3>
-              <p class="text-sm" [class.text-gray-100]="selectedOption === 'scraper'" [class.text-gray-600]="selectedOption !== 'scraper'" [class.dark:text-gray-300]="selectedOption !== 'scraper'">Scrape job details from a URL</p>
-            </div>
-          </div>
-        </button>
-      </div>
+    <div class="flex border-b border-gray-200 dark:border-gray-700 mb-8">
+      <button
+        (click)="selectedOption = 'form'; jobResult = null; showModal = false; currentFormPage = 0;"
+        [class.border-primary]="selectedOption === 'form'"
+        [class.text-primary]="selectedOption === 'form'"
+        [class.border-transparent]="selectedOption !== 'form'"
+        [class.text-gray-600]="selectedOption !== 'form'"
+        [class.dark:text-gray-300]="selectedOption !== 'form'"
+        class="py-3 px-6 text-lg font-medium border-b-2 transition-colors duration-200 focus:outline-none hover:text-primary-dark"
+      >
+      Verify Your Offer
+      </button>
+      <button
+        (click)="selectedOption = 'scraper'; jobResult = null; showModal = false;"
+        [class.border-primary]="selectedOption === 'scraper'"
+        [class.text-primary]="selectedOption === 'scraper'"
+        [class.border-transparent]="selectedOption !== 'scraper'"
+        [class.text-gray-600]="selectedOption !== 'scraper'"
+        [class.dark:text-gray-300]="selectedOption !== 'scraper'"
+        class="py-3 px-6 text-lg font-medium border-b-2 transition-colors duration-200 focus:outline-none hover:text-primary-dark"
+      >
+        Use Job Scraper
+      </button>
     </div>
 
-    <div *ngIf="selectedOption === 'form'" class="card">
+    <div *ngIf="selectedOption === 'form'" class="card animate-fade-in">
       <h2 class="text-xl font-semibold mb-6 text-gray-800 dark:text-white">Job Details Form</h2>
 
       <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
@@ -74,10 +54,10 @@
                 <path *ngIf="riskLevel === 'Medium Risk'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 <path *ngIf="riskLevel === 'High Risk' || riskLevel === 'Very High Risk'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span class="font-bold text-lg">{{ riskLevel }}</span>
+              <span class="font-bold text-lg">Risk Level: {{ riskLevel }}</span>
             </div>
             <div *ngIf="riskLevelDetails.length > 0" class="text-sm cursor-pointer" tabindex="0"
-                [matTooltip]="riskLevelDetails.join('\n')"
+                matTooltip="{{ riskLevelDetails.join('\n') }}"
                 matTooltipPosition="below"
                 matTooltipClass="bg-gray-700 text-white p-2 rounded-md shadow-lg text-xs max-w-sm">
                 <span class="text-gray-700 dark:text-gray-300 hover:underline">Details</span>
@@ -145,7 +125,7 @@
                 (click)="analyzeJobUrl()"
                 [disabled]="urlAnalysisStatus === 'analyzing' || jobForm.get('jobUrl')?.invalid || jobForm.get('jobUrl')?.value === ''"
                 class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-                       dark:bg-blue-700 dark:hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                        dark:bg-blue-700 dark:hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
               >
                 <span *ngIf="urlAnalysisStatus !== 'analyzing'">Analyser l'URL</span>
                 <span *ngIf="urlAnalysisStatus === 'analyzing'">
@@ -390,7 +370,7 @@
       </form>
     </div>
 
-    <div *ngIf="selectedOption === 'scraper'" class="card">
+    <div *ngIf="selectedOption === 'scraper'" class="card animate-fade-in">
       <h2 class="text-xl font-semibold mb-6 text-gray-800 dark:text-white">Job Scraper</h2>
       <p class="text-gray-600 dark:text-gray-300 mb-6">Enter the URL of a job posting to scrape and analyze its details.</p>
 

@@ -5,7 +5,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { JobService } from '../../services/job.service'; // Assurez-vous que ce service existe
 import { UrlAnalysisService } from '../../services/url-analysis.service'; // <-- Importation du service d'analyse d'URL
 import { Job, JobVerificationResult } from '../../models/job.model'; // Assurez-vous que ce modèle existe
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, delay } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 interface JobResult {
   isFake: boolean;
@@ -16,10 +17,10 @@ interface JobResult {
 @Component({
   selector: 'app-job-form',
   templateUrl: './job-form.component.html',
-  styleUrls: ['./job-form.component.css'] // Ou .scss si vous utilisez SASS
+  styleUrls: ['./job-form.component.css'] // Make sure this points to your .css file
 })
 export class JobFormComponent implements OnInit, OnDestroy {
-  selectedOption: 'form' | 'scraper' = 'form';
+  selectedOption: 'form' | 'scraper' = 'form'; // Keeps track of the active tab
   jobForm: FormGroup;
   scraperForm: FormGroup;
   isSubmitting = false;
@@ -360,9 +361,9 @@ export class JobFormComponent implements OnInit, OnDestroy {
       if (this.isFieldInvalid('companyEmail')) {
           const emailErrors = this.jobForm.get('companyEmail')?.errors;
           if (emailErrors?.['required']) {
-              this.jobResult.details?.push('Company email is required.');
+            this.jobResult.details?.push('Company email is required.');
           } else if (emailErrors?.['email']) {
-              this.jobResult.details?.push('Company email format is invalid.');
+            this.jobResult.details?.push('Company email format is invalid.');
           }
       }
       if (this.isFieldInvalid('jobUrl')) {
@@ -468,17 +469,18 @@ export class JobFormComponent implements OnInit, OnDestroy {
     console.log('Scraping URL:', urlToScrape);
 
     // Here you would call a service that handles scraping
-    // For now, let's simulate a result
-    setTimeout(() => {
-      this.isScraperSubmitting = false;
-      const isFakeScraped = urlToScrape.includes('scam') || urlToScrape.includes('phishing');
-      this.jobResult = {
-        isFake: isFakeScraped,
-        message: isFakeScraped ? 'Scraped URL indicates a fraudulent job.' : 'Scraped URL seems legitimate.',
-        details: isFakeScraped ? ['Scraped content contained suspicious patterns.'] : ['No obvious fraud detected in scraped content.']
-      };
-      this.showModal = true;
-    }, 2000);
+    // For now, let's simulate a result using `of` and `delay`
+    of({
+      isFake: urlToScrape.includes('scam') || urlToScrape.includes('phishing'),
+      message: urlToScrape.includes('scam') || urlToScrape.includes('phishing') ? 'Scraped URL indicates a fraudulent job.' : 'Scraped URL seems legitimate.',
+      details: urlToScrape.includes('scam') || urlToScrape.includes('phishing') ? ['Scraped content contained suspicious patterns.'] : ['No obvious fraud detected in scraped content.']
+    })
+      .pipe(delay(2500)) // Simulates a network delay
+      .subscribe(result => {
+        this.isScraperSubmitting = false;
+        this.jobResult = result;
+        this.showModal = true;
+      });
   }
 
 
