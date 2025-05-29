@@ -1,0 +1,137 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-4xl mx-auto">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Job Scraper</h1>
+      <p class="text-gray-600 dark:text-gray-300">Scrape job details from a URL and check if it's legitimate.</p>
+    </div>
+    
+    <div class="card">
+      <form [formGroup]="scraperForm" (ngSubmit)="onSubmit()">
+        <div class="mb-6">
+          <label for="url" class="form-label">Job Posting URL <span class="text-red-500">*</span></label>
+          <input 
+            type="url" 
+            id="url" 
+            formControlName="url" 
+            class="form-input" 
+            placeholder="https://example.com/job-posting"
+            [ngClass]="{'border-red-500': isFieldInvalid('url')}"
+          >
+          <div *ngIf="isFieldInvalid('url')" class="mt-1 text-sm text-red-500">
+            Please enter a valid URL
+          </div>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            Enter the URL of a job posting to scrape and analyze its details.
+          </p>
+        </div>
+        
+        <div class="flex justify-end">
+          <button 
+            type="submit" 
+            class="btn btn-primary"
+            [disabled]="scraperForm.invalid || isSubmitting"
+          >
+            <span *ngIf="!isSubmitting">Scrape and Check</span>
+            <span *ngIf="isSubmitting" class="flex items-center">
+              <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Processing...
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+    
+    <!-- Results Section (will be shown after submission) -->
+    <div *ngIf="jobResult" class="mt-8">
+      <!-- Job Details Card -->
+      <div *ngIf="jobResult.job" class="card mb-6">
+        <h2 class="text-xl font-semibold mb-6 text-gray-800 dark:text-white">Scraped Job Details</h2>
+        
+        <div class="space-y-4">
+          <div>
+            <h3 class="text-lg font-medium text-gray-800 dark:text-white">{{ jobResult.job.title }}</h3>
+            <p class="text-gray-600 dark:text-gray-300">{{ jobResult.job.location }}</p>
+          </div>
+          
+          <div *ngIf="jobResult.job.companyProfile" class="border-t border-gray-200 dark:border-gray-700 pt-4">
+            <h4 class="text-md font-medium mb-2 text-gray-800 dark:text-white">Company Profile</h4>
+            <p class="text-gray-700 dark:text-gray-300">{{ jobResult.job.companyProfile }}</p>
+          </div>
+          
+          <div *ngIf="jobResult.job.description" class="border-t border-gray-200 dark:border-gray-700 pt-4">
+            <h4 class="text-md font-medium mb-2 text-gray-800 dark:text-white">Description</h4>
+            <p class="text-gray-700 dark:text-gray-300">{{ jobResult.job.description }}</p>
+          </div>
+          
+          <div *ngIf="jobResult.job.requirements" class="border-t border-gray-200 dark:border-gray-700 pt-4">
+            <h4 class="text-md font-medium mb-2 text-gray-800 dark:text-white">Requirements</h4>
+            <p class="text-gray-700 dark:text-gray-300">{{ jobResult.job.requirements }}</p>
+          </div>
+          
+          <div *ngIf="jobResult.job.benefits" class="border-t border-gray-200 dark:border-gray-700 pt-4">
+            <h4 class="text-md font-medium mb-2 text-gray-800 dark:text-white">Benefits</h4>
+            <p class="text-gray-700 dark:text-gray-300">{{ jobResult.job.benefits }}</p>
+          </div>
+          
+          <div class="border-t border-gray-200 dark:border-gray-700 pt-4 grid grid-cols-2 gap-4">
+            <div *ngIf="jobResult.job.industry">
+              <h4 class="text-sm font-medium mb-1 text-gray-600 dark:text-gray-400">Industry</h4>
+              <p class="text-gray-800 dark:text-gray-200">{{ jobResult.job.industry }}</p>
+            </div>
+            
+            <div *ngIf="jobResult.job.employmentType">
+              <h4 class="text-sm font-medium mb-1 text-gray-600 dark:text-gray-400">Employment Type</h4>
+              <p class="text-gray-800 dark:text-gray-200">{{ jobResult.job.employmentType }}</p>
+            </div>
+            
+            <div *ngIf="jobResult.job.requiredExperience">
+              <h4 class="text-sm font-medium mb-1 text-gray-600 dark:text-gray-400">Experience</h4>
+              <p class="text-gray-800 dark:text-gray-200">{{ jobResult.job.requiredExperience }} years</p>
+            </div>
+            
+            <div *ngIf="jobResult.job.requiredEducation">
+              <h4 class="text-sm font-medium mb-1 text-gray-600 dark:text-gray-400">Education</h4>
+              <p class="text-gray-800 dark:text-gray-200">{{ jobResult.job.requiredEducation }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Analysis Result Card -->
+      <div class="card">
+        <div class="flex items-center mb-4">
+          <div [ngClass]="{'bg-green-100 dark:bg-green-900': !jobResult.isFake, 'bg-red-100 dark:bg-red-900': jobResult.isFake}" class="p-3 rounded-full mr-4">
+            <svg *ngIf="!jobResult.isFake" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600 dark:text-green-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <svg *ngIf="jobResult.isFake" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600 dark:text-red-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+          <h2 class="text-xl font-semibold text-gray-800 dark:text-white">
+            {{ jobResult.isFake ? 'Potential Fake Job Detected' : 'Job Appears Legitimate' }}
+          </h2>
+        </div>
+        
+        <div class="p-4 mb-4 rounded-lg" [ngClass]="{'bg-green-50 dark:bg-green-900/20': !jobResult.isFake, 'bg-red-50 dark:bg-red-900/20': jobResult.isFake}">
+          <p class="text-gray-800 dark:text-gray-200">
+            {{ jobResult.message }}
+          </p>
+        </div>
+        
+        <div *ngIf="jobResult.details" class="mt-6">
+          <h3 class="text-lg font-medium mb-3 text-gray-800 dark:text-white">Analysis Details</h3>
+          <div class="space-y-2">
+            <div *ngFor="let detail of jobResult.details" class="flex">
+              <div class="mr-2 text-gray-500 dark:text-gray-400">•</div>
+              <div class="text-gray-700 dark:text-gray-300">{{ detail }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

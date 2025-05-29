@@ -1,0 +1,8 @@
+[build]
+  publish = "dist/job-checker-app"
+  command = "ng build"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

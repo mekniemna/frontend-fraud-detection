@@ -1,0 +1,208 @@
+<!-- Job Listings Page -->
+<div class="container mx-auto px-4 py-8">
+  
+  <!-- Page Header with Stats -->
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+    <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-4">Job Listings</h1>
+    
+    <div class="flex flex-wrap -mx-2">
+      <div class="w-full md:w-1/2 px-2 mb-4">
+        <div class="bg-blue-50 dark:bg-blue-900 rounded-lg p-4 flex items-center">
+          <div class="rounded-full bg-blue-500 p-3 mr-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm text-blue-700 dark:text-blue-300">Available Jobs</p>
+            <p class="text-2xl font-bold text-blue-800 dark:text-blue-200">{{ filteredJobs.length }}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="w-full md:w-1/2 px-2 mb-4">
+        <div class="bg-green-50 dark:bg-green-900 rounded-lg p-4 flex items-center">
+          <div class="rounded-full bg-green-500 p-3 mr-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm text-green-700 dark:text-green-300">Verified Jobs</p>
+            <p class="text-2xl font-bold text-green-800 dark:text-green-200">{{ verifiedJobs }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Search and Filters -->
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+    <div class="flex flex-wrap -mx-2">
+      <div class="w-full md:w-2/3 px-2 mb-4">
+        <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search Jobs</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <input [(ngModel)]="searchTerm" (input)="applyFilters()" type="text" id="search" class="search-input block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-900 dark:text-white sm:text-sm transition-all duration-300" placeholder="Search by title, company, or location">
+        </div>
+      </div>
+      
+      <div class="w-full md:w-1/3 px-2 mb-4">
+        <label for="sort" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Sort By</label>
+        <select [(ngModel)]="sortOption" (change)="applyFilters()" id="sort" class="block w-full pl-3 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-900 dark:text-white sm:text-sm transition-all duration-300">
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
+          <option value="salary_high">Highest Salary</option>
+          <option value="salary_low">Lowest Salary</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8 flex flex-col items-center justify-center">
+    <div class="skeleton w-16 h-16 rounded-full mb-4"></div>
+    <div class="skeleton w-48 h-6 rounded mb-3"></div>
+    <div class="skeleton w-64 h-4 rounded mb-6"></div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+      <div class="skeleton h-64 rounded-lg" *ngFor="let i of [1,2,3,4,5,6]"></div>
+    </div>
+  </div>
+  
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8 text-center">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-red-500 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">Error Loading Jobs</h2>
+    <p class="text-gray-600 dark:text-gray-400 mb-6">{{error}}</p>
+    <button (click)="loadJobs()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300">
+      Try Again
+    </button>
+  </div>
+  
+  <!-- Job Listings -->
+  <div *ngIf="!isLoading && !error" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div *ngFor="let job of filteredJobs | slice:(currentPage-1)*itemsPerPage:currentPage*itemsPerPage; let i = index" 
+         class="job-card bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden relative"
+         [id]="'job-card-' + job.id">
+      
+      <!-- Ripple effect for job card -->
+      <app-ripple-effect [color]="'rgba(59, 130, 246, 0.2)'"></app-ripple-effect>
+      
+      <!-- Job badges -->
+      <div class="absolute top-4 right-4 flex space-x-2">
+        <span *ngIf="i === 0 || i === 3" class="bg-primary text-white text-xs font-bold px-2 py-1 rounded-full">Featured</span>
+        <span *ngIf="i === 1 || i === 4" class="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">New</span>
+        <span *ngIf="job.isVerified" class="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">Verified</span>
+      </div>
+      
+      <!-- Company logo -->
+      <div class="p-6 pb-0">
+        <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center overflow-hidden mb-4">
+          <span class="text-2xl font-bold text-gray-500 dark:text-gray-400">{{job.title.charAt(0)}}</span>
+        </div>
+        
+        <!-- Job details -->
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">{{job.title}}</h3>
+        <p class="text-gray-600 dark:text-gray-400 mb-2">{{job.company || 'Unknown Company'}}</p>
+        
+        <div class="flex items-center text-gray-500 dark:text-gray-400 mb-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <span class="text-sm">{{job.location}}</span>
+        </div>
+        
+        <div *ngIf="job.salary" class="flex items-center text-gray-500 dark:text-gray-400 mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span class="text-sm">{{job.salary}}</span>
+        </div>
+        
+        <!-- Job description -->
+        <p class="text-gray-700 dark:text-gray-300 mb-4 line-clamp-3">{{job.description}}</p>
+        
+        <!-- Job benefits/tags -->
+        <div class="flex flex-wrap gap-2 mb-4">
+          <span *ngFor="let benefit of job.benefits" class="bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs px-2 py-1 rounded">{{benefit}}</span>
+        </div>
+      </div>
+      
+      <!-- Job actions -->
+      <div class="px-6 pb-6">
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-500 dark:text-gray-400">
+            Posted {{job.postedDate || job.createdAt | date}}
+          </span>
+          
+          <button (click)="verifyJob(+job.id)" 
+                  [disabled]="job.isVerifying || job.isVerified" 
+                  class="verify-btn px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center">
+            <span *ngIf="job.isVerifying" class="mr-2">
+              <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </span>
+            <span *ngIf="!job.isVerifying && !job.isVerified">Verify Job</span>
+            <span *ngIf="!job.isVerifying && job.isVerified">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Verified
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && !error && filteredJobs.length === 0" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8 text-center">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">No Jobs Found</h2>
+    <p class="text-gray-600 dark:text-gray-400 mb-6">Try adjusting your search or filters to find what you're looking for.</p>
+    <button (click)="resetFilters()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300">
+      Reset Filters
+    </button>
+  </div>
+  
+  <!-- Pagination -->
+  <div *ngIf="!isLoading && !error && filteredJobs.length > 0" class="mt-8 flex justify-center">
+    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+      <button 
+        (click)="currentPage = currentPage - 1" 
+        [disabled]="currentPage === 1"
+        class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300">
+        <span class="sr-only">Previous</span>
+        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+        </svg>
+      </button>
+      
+      <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-700 dark:text-gray-300">
+        Page {{currentPage}} of {{Math.ceil(filteredJobs.length / itemsPerPage)}}
+      </span>
+      
+      <button 
+        (click)="currentPage = currentPage + 1" 
+        [disabled]="currentPage >= Math.ceil(filteredJobs.length / itemsPerPage)"
+        class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300">
+        <span class="sr-only">Next</span>
+        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+        </svg>
+      </button>
+    </nav>
+  </div>
+</div>
