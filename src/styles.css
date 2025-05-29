@@ -1,0 +1,125 @@
+/* You can add global styles to this file, and also import other style files */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles for dark theme */
+:root {
+  --bg-dark: #111827;
+  --bg-dark-light: #1F2937;
+  --text-light: #F9FAFB;
+}
+
+body {
+  @apply bg-white dark:bg-dark text-gray-800 dark:text-gray-100;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Custom utility classes */
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-md font-medium transition-colors duration-200;
+  }
+  
+  .btn-primary {
+    @apply bg-primary hover:bg-blue-600 text-white;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary hover:bg-green-600 text-white;
+  }
+  
+  .card {
+    @apply bg-white dark:bg-dark-light rounded-lg shadow-md p-6;
+  }
+  
+  .form-input {
+    @apply w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 
+           bg-white dark:bg-dark-light text-gray-800 dark:text-gray-100
+           focus:outline-none focus:ring-2 focus:ring-primary;
+  }
+  
+  .form-label {
+    @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1;
+  }
+  
+  .form-select {
+    @apply form-input appearance-none bg-no-repeat bg-right;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-size: 1.5em 1.5em;
+  }
+}
+
+/* Tooltip styles */
+.tooltip {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  z-index: 1000;
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.2s ease;
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+}
+
+.tooltip-top::after {
+  border-top-color: rgba(0, 0, 0, 0.8);
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tooltip-bottom::after {
+  border-bottom-color: rgba(0, 0, 0, 0.8);
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tooltip-left::after {
+  border-left-color: rgba(0, 0, 0, 0.8);
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.tooltip-right::after {
+  border-right-color: rgba(0, 0, 0, 0.8);
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Dark mode tooltip adjustments */
+.dark .tooltip {
+  background-color: rgba(30, 41, 59, 0.95);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+.dark .tooltip-top::after {
+  border-top-color: rgba(30, 41, 59, 0.95);
+}
+
+.dark .tooltip-bottom::after {
+  border-bottom-color: rgba(30, 41, 59, 0.95);
+}
+
+.dark .tooltip-left::after {
+  border-left-color: rgba(30, 41, 59, 0.95);
+}
+
+.dark .tooltip-right::after {
+  border-right-color: rgba(30, 41, 59, 0.95);
+}
