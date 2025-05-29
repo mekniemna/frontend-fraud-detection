@@ -2,7 +2,7 @@
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { JobService } from '../../services/job.service'; // Assurez-vous que ce service existe
+import {FraudPredictionResult, JobService} from '../../services/job.service'; // Assurez-vous que ce service existe
 import { UrlAnalysisService } from '../../services/url-analysis.service'; // <-- Importation du service d'analyse d'URL
 import { Job, JobVerificationResult } from '../../models/job.model'; // Assurez-vous que ce modèle existe
 import { debounceTime, distinctUntilChanged, delay } from 'rxjs/operators';
@@ -26,6 +26,9 @@ export class JobFormComponent implements OnInit, OnDestroy {
   isSubmitting = false;
   isScraperSubmitting = false;
   jobResult: JobResult | null = null;
+  urlError : String = "";
+
+  jobPredictionResult: FraudPredictionResult | null = null;
 
   currentFormPage = 0;
   showModal: boolean = false;
@@ -424,6 +427,34 @@ export class JobFormComponent implements OnInit, OnDestroy {
     const jobData: Job = this.jobForm.value; // Your Job model interface
 
     // Example of calling your JobService (replace with your actual service logic)
+
+    this.jobService.predictJobFraud(jobData).subscribe({
+      next: (fraudPredictionResult: FraudPredictionResult) => {
+        this.isSubmitting = false;
+        this.jobPredictionResult = {
+          is_fraudulent: fraudPredictionResult.is_fraudulent,
+          fraud_probability: fraudPredictionResult.fraud_probability,
+          confidence: fraudPredictionResult.confidence,
+          legitimate_probability: fraudPredictionResult.legitimate_probability,
+          risk_level: fraudPredictionResult.risk_level,
+          extracted_features: fraudPredictionResult.extracted_features,
+        };
+        if (this.jobPredictionResult.is_fraudulent) {
+          console.log('⚠️ Cette offre d\'emploi est frauduleuse !');
+        } else {
+          console.log('✅ Cette offre d\'emploi semble légitime.');
+        }
+        this.showModal = true;
+        this.isSubmitting = false;
+      },
+      error: (error) => {
+        this.showModal = true;
+        this.isSubmitting = false;
+        console.error('Erreur lors de la vérification:', error.message);
+      }
+    });
+
+    /**
     this.jobService.verifyJob(jobData).subscribe({
         next: (result: JobVerificationResult) => {
             console.log('Job verification result:', result);
@@ -446,16 +477,19 @@ export class JobFormComponent implements OnInit, OnDestroy {
             this.isSubmitting = false; // Stop submitting state
         }
     });
+     **/
   }
 
   onScraperSubmit(): void {
     this.isScraperSubmitting = true;
     this.jobResult = null;
+    this.jobPredictionResult = null;
     this.showModal = false;
 
     if (this.scraperForm.invalid) {
       this.scraperForm.markAllAsTouched();
       this.isScraperSubmitting = false;
+
       this.jobResult = {
         isFake: true,
         message: 'Please enter a valid URL for the scraper.',
