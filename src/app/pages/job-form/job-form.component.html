@@ -4,33 +4,57 @@
       <p class="text-3xl font-bold text-gray-900 dark:text-white mb-2 animate-fade-in-out">{{ currentTagline }}</p>
     </div>
 
-    <div class="flex border-b border-gray-200 dark:border-gray-700 mb-8">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-200 dark:border-gray-700 mb-8">
+      <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white">Select an option</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <button
+          (click)="selectedOption = 'form'; jobResult = null; showModal = false; currentFormPage = 0;"
+          [class.bg-blue-500]="selectedOption === 'form'"
+          [class.text-white]="selectedOption === 'form'"
+          [class.bg-white]="selectedOption !== 'form'"
+          [class.text-gray-800]="selectedOption !== 'form'"
+          [class.dark:bg-gray-700]="selectedOption !== 'form'"
+          [class.dark:text-gray-200]="selectedOption !== 'form'"
+          class="p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200 hover:shadow-md"
+        >
+          <div class="flex items-center">
+            <div class="mr-4" [ngClass]="{'text-white': selectedOption === 'form', 'text-blue-500': selectedOption !== 'form'}">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-lg font-medium" [ngClass]="{'text-white': selectedOption === 'form', 'text-gray-800 dark:text-white': selectedOption !== 'form'}">Add Job Manually</h3>
+              <p class="text-sm" [ngClass]="{'text-blue-100': selectedOption === 'form', 'text-gray-600 dark:text-gray-300': selectedOption !== 'form'}">Enter job details manually through a form</p>
+            </div>
+          </div>
+        </button>
 
-      <button
-        (click)="selectedOption = 'form'; jobResult = null; showModal = false; currentFormPage = 0;"
-        [class.border-primary]="selectedOption === 'form'"
-        [class.text-primary]="selectedOption === 'form'"
-        [class.border-transparent]="selectedOption !== 'form'"
-        [class.text-gray-600]="selectedOption !== 'form'"
-        [class.dark:text-gray-300]="selectedOption !== 'form'"
-        class="py-3 px-6 text-lg font-medium border-b-2 transition-colors duration-200 focus:outline-none hover:text-primary-dark"
-      >
-      Verify Your Offer
-      </button>
-      <button
-        (click)="selectedOption = 'scraper'; jobResult = null; showModal = false;"
-        [class.border-primary]="selectedOption === 'scraper'"
-        [class.text-primary]="selectedOption === 'scraper'"
-        [class.border-transparent]="selectedOption !== 'scraper'"
-        [class.text-gray-600]="selectedOption !== 'scraper'"
-        [class.dark:text-gray-300]="selectedOption !== 'scraper'"
-        class="py-3 px-6 text-lg font-medium border-b-2 transition-colors duration-200 focus:outline-none hover:text-primary-dark"
-      >
-        Use Job Scraper
-      </button>
+        <button
+          (click)="selectedOption = 'scraper'; jobResult = null; showModal = false;"
+          [class.bg-blue-500]="selectedOption === 'scraper'"
+          [class.text-white]="selectedOption === 'scraper'"
+          [class.bg-white]="selectedOption !== 'scraper'"
+          [class.text-gray-800]="selectedOption !== 'scraper'"
+          [class.dark:bg-gray-700]="selectedOption !== 'scraper'"
+          [class.dark:text-gray-200]="selectedOption !== 'scraper'"
+          class="p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200 hover:shadow-md"
+        >
+          <div class="flex items-center">
+            <div class="mr-4" [ngClass]="{'text-white': selectedOption === 'scraper', 'text-blue-500': selectedOption !== 'scraper'}">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-lg font-medium" [ngClass]="{'text-white': selectedOption === 'scraper', 'text-gray-800 dark:text-white': selectedOption !== 'scraper'}">Use Job Scraper</h3>
+              <p class="text-sm" [ngClass]="{'text-blue-100': selectedOption === 'scraper', 'text-gray-600 dark:text-gray-300': selectedOption !== 'scraper'}">Scrape job details from a URL</p>
+            </div>
+          </div>
+        </button>
+      </div>
     </div>
-
-    <div *ngIf="selectedOption === 'form'" class="card animate-fade-in">
+    <div *ngIf="selectedOption === 'form'" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-200 dark:border-gray-700 animate-fade-in">
       <h2 class="text-xl font-semibold mb-6 text-gray-800 dark:text-white">Job Details Form</h2>
 
       <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
@@ -65,12 +89,12 @@
             </div>
           </div>
           <div>
-            <label for="title" class="form-label">Title <span class="text-red-500">*</span></label>
+            <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Title <span class="text-red-500">*</span></label>
             <input
               type="text"
               id="title"
               formControlName="title"
-              class="form-input"
+              class="block w-full px-4 py-3 text-base text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:text-gray-200 dark:bg-gray-800 dark:border-gray-700"
               placeholder="e.g. Software Engineer"
               [ngClass]="{'border-red-500': isFieldInvalid('title')}"
             >
@@ -80,12 +104,12 @@
           </div>
 
           <div>
-            <label for="companyName" class="form-label">Company Name <span class="text-red-500">*</span></label>
+            <label for="companyName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Company Name <span class="text-red-500">*</span></label>
             <input
               type="text"
               id="companyName"
               formControlName="companyName"
-              class="form-input"
+              class="block w-full px-4 py-3 text-base text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:text-gray-200 dark:bg-gray-800 dark:border-gray-700"
               placeholder="e.g. Acme Corp."
               [ngClass]="{'border-red-500': isFieldInvalid('companyName')}"
             >
@@ -95,12 +119,12 @@
           </div>
 
           <div>
-            <label for="companyEmail" class="form-label">Company Email <span class="text-red-500">*</span></label>
+            <label for="companyEmail" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Company Email <span class="text-red-500">*</span></label>
             <input
               type="email"
               id="companyEmail"
               formControlName="companyEmail"
-              class="form-input"
+              class="block w-full px-4 py-3 text-base text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:text-gray-200 dark:bg-gray-800 dark:border-gray-700"
               placeholder="e.g. contact@acmecorp.com"
               [ngClass]="{'border-red-500': isFieldInvalid('companyEmail')}"
             >
@@ -111,13 +135,13 @@
           </div>
 
           <div>
-            <label for="jobUrl" class="form-label">Job URL</label>
+            <label for="jobUrl" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Job URL</label>
             <div class="flex items-center space-x-2">
               <input
                 type="url"
                 id="jobUrl"
                 formControlName="jobUrl"
-                class="form-input flex-1"
+                class="block w-full px-4 py-3 text-base text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:text-gray-200 dark:bg-gray-800 dark:border-gray-700 flex-1"
                 placeholder="e.g. https://jobs.acmecorp.com/software-engineer"
                 [ngClass]="{'border-red-500': isFieldInvalid('jobUrl')}"
               >
@@ -126,7 +150,7 @@
                 (click)="analyzeJobUrl()"
                 [disabled]="urlAnalysisStatus === 'analyzing' || jobForm.get('jobUrl')?.invalid || jobForm.get('jobUrl')?.value === ''"
                 class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-                        dark:bg-blue-700 dark:hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                       dark:bg-blue-700 dark:hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
               >
                 <span *ngIf="urlAnalysisStatus !== 'analyzing'">Analyser l'URL</span>
                 <span *ngIf="urlAnalysisStatus === 'analyzing'">
@@ -154,12 +178,12 @@
             </div>
           </div>
           <div>
-            <label for="location" class="form-label">Location <span class="text-red-500">*</span></label>
+            <label for="location" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Location <span class="text-red-500">*</span></label>
             <input
               type="text"
               id="location"
               formControlName="location"
-              class="form-input"
+              class="block w-full px-4 py-3 text-base text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:text-gray-200 dark:bg-gray-800 dark:border-gray-700"
               placeholder="e.g. Country Name"
               [ngClass]="{'border-red-500': isFieldInvalid('location')}"
             >
@@ -169,12 +193,12 @@
           </div>
 
           <div>
-            <label for="industry" class="form-label">Industry <span class="text-red-500">*</span></label>
+            <label for="industry" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Industry <span class="text-red-500">*</span></label>
             <input
               type="text"
               id="industry"
               formControlName="industry"
-              class="form-input"
+              class="block w-full px-4 py-3 text-base text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:text-gray-200 dark:bg-gray-800 dark:border-gray-700"
               placeholder="e.g. Technology"
               [ngClass]="{'border-red-500': isFieldInvalid('industry')}"
             >
@@ -184,34 +208,34 @@
           </div>
 
           <div>
-            <label for="salaryRange" class="form-label">Salary Range</label>
+            <label for="salaryRange" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Salary Range</label>
             <input
               type="text"
               id="salaryRange"
               formControlName="salaryRange"
-              class="form-input"
+              class="block w-full px-4 py-3 text-base text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:text-gray-200 dark:bg-gray-800 dark:border-gray-700"
               placeholder="e.g. $80,000 - $100,000"
             >
           </div>
 
           <div>
-            <label for="companyProfile" class="form-label">Company Profile</label>
+            <label for="companyProfile" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Company Profile</label>
             <textarea
               id="companyProfile"
               formControlName="companyProfile"
               rows="2"
-              class="form-input"
+              class="block w-full px-4 py-3 text-base text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:text-gray-200 dark:bg-gray-800 dark:border-gray-700"
               placeholder="Brief description of the company or its mission."
             ></textarea>
           </div>
 
           <div class="col-span-2">
-            <label for="description" class="form-label">Job Description <span class="text-red-500">*</span></label>
+            <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Job Description <span class="text-red-500">*</span></label>
             <textarea
               id="description"
               formControlName="description"
               rows="4"
-              class="form-input"
+              class="block w-full px-4 py-3 text-base text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:text-gray-200 dark:bg-gray-800 dark:border-gray-700"
               placeholder="Detailed job description"
               [ngClass]="{'border-red-500': isFieldInvalid('description')}"
             ></textarea>
@@ -221,12 +245,12 @@
           </div>
 
           <div class="col-span-2">
-            <label for="requirements" class="form-label">Requirements <span class="text-red-500">*</span></label>
+            <label for="requirements" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Requirements <span class="text-red-500">*</span></label>
             <textarea
               id="requirements"
               formControlName="requirements"
               rows="4"
-              class="form-input"
+              class="block w-full px-4 py-3 text-base text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:text-gray-200 dark:bg-gray-800 dark:border-gray-700"
               placeholder="Job requirements and qualifications"
               [ngClass]="{'border-red-500': isFieldInvalid('requirements')}"
             ></textarea>
@@ -238,8 +262,8 @@
 
         <div *ngIf="currentFormPage === 1" class="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in">
           <div>
-            <label for="employmentType" class="form-label">Employment Type</label>
-            <select id="employmentType" formControlName="employmentType" class="form-select">
+            <label for="employmentType" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Employment Type</label>
+            <select id="employmentType" formControlName="employmentType" class="block w-full px-4 py-3 text-base text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:text-gray-200 dark:bg-gray-800 dark:border-gray-700">
               <option value="">Select an option</option>
               <option value="Full-time">Full-time</option>
               <option value="Part-time">Part-time</option>
@@ -250,20 +274,20 @@
           </div>
 
           <div>
-            <label for="requiredExperience" class="form-label">Required Experience (Years)</label>
+            <label for="requiredExperience" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Required Experience (Years)</label>
             <input
               type="number"
               id="requiredExperience"
               formControlName="requiredExperience"
-              class="form-input"
+              class="block w-full px-4 py-3 text-base text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:text-gray-200 dark:bg-gray-800 dark:border-gray-700"
               placeholder="e.g. 3"
               min="0"
             >
           </div>
 
           <div>
-            <label for="requiredEducation" class="form-label">Required Education</label>
-            <select id="requiredEducation" formControlName="requiredEducation" class="form-select">
+            <label for="requiredEducation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Required Education</label>
+            <select id="requiredEducation" formControlName="requiredEducation" class="block w-full px-4 py-3 text-base text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:text-gray-200 dark:bg-gray-800 dark:border-gray-700">
               <option value="">Select an option</option>
               <option value="High School">High School</option>
               <option value="Associate's Degree">Associate's Degree</option>
@@ -274,8 +298,8 @@
           </div>
 
           <div>
-            <label for="telecommuting" class="form-label">Telecommuting</label>
-            <select id="telecommuting" formControlName="telecommuting" class="form-select">
+            <label for="telecommuting" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Telecommuting</label>
+            <select id="telecommuting" formControlName="telecommuting" class="block w-full px-4 py-3 text-base text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:text-gray-200 dark:bg-gray-800 dark:border-gray-700">
               <option [ngValue]="null">Select an option</option>
               <option [ngValue]="true">Yes</option>
               <option [ngValue]="false">No</option>
@@ -283,8 +307,8 @@
           </div>
 
           <div>
-            <label for="hasCompanyLogo" class="form-label">Has Company Logo</label>
-            <select id="hasCompanyLogo" formControlName="hasCompanyLogo" class="form-select">
+            <label for="hasCompanyLogo" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Has Company Logo</label>
+            <select id="hasCompanyLogo" formControlName="hasCompanyLogo" class="block w-full px-4 py-3 text-base text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:text-gray-200 dark:bg-gray-800 dark:border-gray-700">
               <option [ngValue]="null">Select an option</option>
               <option [ngValue]="true">Yes</option>
               <option [ngValue]="false">No</option>
@@ -292,8 +316,8 @@
           </div>
 
           <div>
-            <label for="hasQuestions" class="form-label">Has Questions</label>
-            <select id="hasQuestions" formControlName="hasQuestions" class="form-select">
+            <label for="hasQuestions" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Has Questions</label>
+            <select id="hasQuestions" formControlName="hasQuestions" class="block w-full px-4 py-3 text-base text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:text-gray-200 dark:bg-gray-800 dark:border-gray-700">
               <option [ngValue]="null">Select an option</option>
               <option [ngValue]="true">Yes</option>
               <option [ngValue]="false">No</option>
@@ -301,33 +325,33 @@
           </div>
 
           <div>
-            <label for="department" class="form-label">Department</label>
+            <label for="department" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Department</label>
             <input
               type="text"
               id="department"
               formControlName="department"
-              class="form-input"
+              class="block w-full px-4 py-3 text-base text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:text-gray-200 dark:bg-gray-800 dark:border-gray-700"
               placeholder="e.g. Engineering"
             >
           </div>
           <div>
-            <label for="function" class="form-label">Function</label>
+            <label for="function" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Function</label>
             <input
               type="text"
               id="function"
               formControlName="function"
-              class="form-input"
+              class="block w-full px-4 py-3 text-base text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:text-gray-200 dark:bg-gray-800 dark:border-gray-700"
               placeholder="e.g. Development"
             >
           </div>
 
           <div class="col-span-2">
-            <label for="benefits" class="form-label">Benefits</label>
+            <label for="benefits" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Benefits</label>
             <input
               type="text"
               id="benefits"
               formControlName="benefits"
-              class="form-input"
+              class="block w-full px-4 py-3 text-base text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:text-gray-200 dark:bg-gray-800 dark:border-gray-700"
               placeholder="e.g. Health insurance, Paid time off, 401K"
             >
           </div>
@@ -338,7 +362,7 @@
             type="button"
             *ngIf="currentFormPage > 0"
             (click)="previousFormPage()"
-            class="btn btn-secondary"
+            class="inline-flex items-center justify-center py-3 px-6 rounded-md font-semibold transition-all duration-200 cursor-pointer bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
           >
             Previous
           </button>
@@ -347,7 +371,7 @@
             type="button"
             *ngIf="currentFormPage < 1"
             (click)="nextFormPage()"
-            class="btn btn-primary"
+            class="inline-flex items-center justify-center py-3 px-6 rounded-md font-semibold transition-all duration-200 cursor-pointer bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800"
           >
             Next
           </button>
@@ -355,7 +379,7 @@
           <button
             type="submit"
             *ngIf="currentFormPage === 1"
-            class="btn btn-primary"
+            class="inline-flex items-center justify-center py-3 px-6 rounded-md font-semibold transition-all duration-200 cursor-pointer bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800"
             [disabled]="jobForm.invalid || isSubmitting"
             >
             <span *ngIf="!isSubmitting">Check Job</span>
@@ -371,18 +395,18 @@
       </form>
     </div>
 
-    <div *ngIf="selectedOption === 'scraper'" class="card animate-fade-in">
+    <div *ngIf="selectedOption === 'scraper'" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-200 dark:border-gray-700 animate-fade-in">
       <h2 class="text-xl font-semibold mb-6 text-gray-800 dark:text-white">Job Scraper</h2>
       <p class="text-gray-600 dark:text-gray-300 mb-6">Enter the URL of a job posting to scrape and analyze its details.</p>
 
       <form [formGroup]="scraperForm" (ngSubmit)="onScraperSubmit()">
         <div class="mb-6">
-          <label for="url" class="form-label">Job Posting URL <span class="text-red-500">*</span></label>
+          <label for="url" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Job Posting URL <span class="text-red-500">*</span></label>
           <input
             type="url"
             id="url"
             formControlName="url"
-            class="form-input"
+            class="block w-full px-4 py-3 text-base text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:text-gray-200 dark:bg-gray-800 dark:border-gray-700"
             placeholder="https://example.com/job-posting"
             [ngClass]="{'border-red-500': isScraperFieldInvalid('url')}"
           >
@@ -394,7 +418,7 @@
         <div class="flex justify-end">
           <button
             type="submit"
-            class="btn btn-primary"
+            class="inline-flex items-center justify-center py-3 px-6 rounded-md font-semibold transition-all duration-200 cursor-pointer bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800"
             [disabled]="scraperForm.invalid || isScraperSubmitting"
           >
             <span *ngIf="!isScraperSubmitting">Scrape and Check</span>
@@ -412,7 +436,7 @@
   </div>
 </div>
 
-<div *ngIf="showModal &&  jobPredictionResult " class="fixed inset-0 bg-gray-900 bg-opacity-75 dark:bg-opacity-90 flex items-center justify-center z-50 p-4">
+<div *ngIf="showModal && jobPredictionResult" class="fixed inset-0 bg-gray-900 bg-opacity-75 dark:bg-opacity-90 flex items-center justify-center z-50 p-4">
   <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md relative animate-fade-in-up">
     <button
       (click)="closeModal()"
@@ -425,39 +449,53 @@
     </button>
 
     <div class="flex items-center mb-4">
-      <div
-        [ngClass]="{
-          'bg-green-100 dark:bg-green-900': !jobPredictionResult.is_fraudulent,
-          'bg-red-100 dark:bg-red-900': jobPredictionResult.is_fraudulent
-        }"
-        class="p-3 rounded-full mr-4"
-      >
-        <svg *ngIf="!jobPredictionResult.is_fraudulent" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600 dark:text-green-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-        </svg>
-        <svg *ngIf="jobPredictionResult.is_fraudulent" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600 dark:text-red-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </div>
-      <h2 class="text-xl font-semibold text-gray-800 dark:text-white">
-        {{ jobPredictionResult.is_fraudulent ? 'Fraudulent Job Detected' : 'Job Appears Legitimate' }}
-      </h2>
+      <ng-container *ngIf="['Low Risk', 'Medium Risk'].includes(riskLevel) && jobForm.valid; else actualFraudulentCheck">
+        <div class="bg-green-100 dark:bg-green-900 p-3 rounded-full mr-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600 dark:text-green-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Job Appears Legitimate</h2>
+      </ng-container>
+
+      <ng-template #actualFraudulentCheck>
+        <div
+          [ngClass]="{
+            'bg-green-100 dark:bg-green-900': !jobPredictionResult.is_fraudulent,
+            'bg-red-100 dark:bg-red-900': jobPredictionResult.is_fraudulent
+          }"
+          class="p-3 rounded-full mr-4"
+        >
+          <svg *ngIf="!jobPredictionResult.is_fraudulent" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600 dark:text-green-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          <svg *ngIf="jobPredictionResult.is_fraudulent" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600 dark:text-red-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </div>
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-white">
+          {{ jobPredictionResult.is_fraudulent ? 'Fraudulent Job Detected' : 'Job Appears Legitimate' }}
+        </h2>
+      </ng-template>
     </div>
 
     <div
       class="p-4 mb-4 rounded-lg"
       [ngClass]="{
-        'bg-green-50 dark:bg-green-900/20': !jobPredictionResult.is_fraudulent,
-        'bg-red-50 dark:bg-red-900/20': jobPredictionResult.is_fraudulent
+        'bg-green-50 dark:bg-green-900/20': ['Low Risk', 'Medium Risk'].includes(riskLevel) && jobForm.valid || !jobPredictionResult.is_fraudulent,
+        'bg-red-50 dark:bg-red-900/20': !(['Low Risk', 'Medium Risk'].includes(riskLevel) && jobForm.valid) && jobPredictionResult.is_fraudulent
       }">
       <p class="text-gray-800 dark:text-gray-200">
-        <span *ngIf="jobPredictionResult.risk_level  === 'TRÈS BAS'">
+        <span *ngIf="['Low Risk', 'Medium Risk'].includes(riskLevel) && jobForm.valid">
+          🟢 Very Low Risk: This job posting appears to be safe. (Override due to acceptable form risk)
+        </span>
+        <span *ngIf="!(['Low Risk', 'Medium Risk'].includes(riskLevel) && jobForm.valid) && jobPredictionResult.risk_level === 'TRÈS BAS'">
           🟢 Very Low Risk: This job posting appears to be safe.
         </span>
-        <span *ngIf="jobPredictionResult.risk_level === 'MOYEN'">
+        <span *ngIf="!(['Low Risk', 'Medium Risk'].includes(riskLevel) && jobForm.valid) && jobPredictionResult.risk_level === 'MOYEN'">
           🟡 Moderate Risk: Some suspicious elements found.
         </span>
-        <span *ngIf="jobPredictionResult.risk_level === 'TRÈS ÉLEVÉ' ">
+        <span *ngIf="!(['Low Risk', 'Medium Risk'].includes(riskLevel) && jobForm.valid) && jobPredictionResult.risk_level === 'TRÈS ÉLEVÉ'">
           🔴 Very High Risk: This job posting is likely fraudulent.
         </span>
       </p>
@@ -474,7 +512,7 @@
     </div>
 
     <div class="mt-6 text-right">
-      <button (click)="closeModal()" class="btn btn-secondary">
+      <button (click)="closeModal()" class="inline-flex items-center justify-center py-3 px-6 rounded-md font-semibold transition-all duration-200 cursor-pointer bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-800">
         Close
       </button>
     </div>
