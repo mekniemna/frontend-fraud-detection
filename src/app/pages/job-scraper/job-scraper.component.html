@@ -4,16 +4,16 @@
       <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Job Scraper</h1>
       <p class="text-gray-600 dark:text-gray-300">Scrape job details from a URL and check if it's legitimate.</p>
     </div>
-    
+
     <div class="card">
       <form [formGroup]="scraperForm" (ngSubmit)="onSubmit()">
         <div class="mb-6">
           <label for="url" class="form-label">Job Posting URL <span class="text-red-500">*</span></label>
-          <input 
-            type="url" 
-            id="url" 
-            formControlName="url" 
-            class="form-input" 
+          <input
+            type="url"
+            id="url"
+            formControlName="url"
+            class="form-input"
             placeholder="https://example.com/job-posting"
             [ngClass]="{'border-red-500': isFieldInvalid('url')}"
           >
@@ -24,14 +24,14 @@
             Enter the URL of a job posting to scrape and analyze its details.
           </p>
         </div>
-        
+
         <div class="flex justify-end">
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             class="btn btn-primary"
             [disabled]="scraperForm.invalid || isSubmitting"
           >
-            <span *ngIf="!isSubmitting">Scrape and Check</span>
+            <span *ngIf="!isSubmitting">Scrape and Check </span>
             <span *ngIf="isSubmitting" class="flex items-center">
               <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -43,63 +43,9 @@
         </div>
       </form>
     </div>
-    
+
     <!-- Results Section (will be shown after submission) -->
     <div *ngIf="jobResult" class="mt-8">
-      <!-- Job Details Card -->
-      <div *ngIf="jobResult.job" class="card mb-6">
-        <h2 class="text-xl font-semibold mb-6 text-gray-800 dark:text-white">Scraped Job Details</h2>
-        
-        <div class="space-y-4">
-          <div>
-            <h3 class="text-lg font-medium text-gray-800 dark:text-white">{{ jobResult.job.title }}</h3>
-            <p class="text-gray-600 dark:text-gray-300">{{ jobResult.job.location }}</p>
-          </div>
-          
-          <div *ngIf="jobResult.job.companyProfile" class="border-t border-gray-200 dark:border-gray-700 pt-4">
-            <h4 class="text-md font-medium mb-2 text-gray-800 dark:text-white">Company Profile</h4>
-            <p class="text-gray-700 dark:text-gray-300">{{ jobResult.job.companyProfile }}</p>
-          </div>
-          
-          <div *ngIf="jobResult.job.description" class="border-t border-gray-200 dark:border-gray-700 pt-4">
-            <h4 class="text-md font-medium mb-2 text-gray-800 dark:text-white">Description</h4>
-            <p class="text-gray-700 dark:text-gray-300">{{ jobResult.job.description }}</p>
-          </div>
-          
-          <div *ngIf="jobResult.job.requirements" class="border-t border-gray-200 dark:border-gray-700 pt-4">
-            <h4 class="text-md font-medium mb-2 text-gray-800 dark:text-white">Requirements</h4>
-            <p class="text-gray-700 dark:text-gray-300">{{ jobResult.job.requirements }}</p>
-          </div>
-          
-          <div *ngIf="jobResult.job.benefits" class="border-t border-gray-200 dark:border-gray-700 pt-4">
-            <h4 class="text-md font-medium mb-2 text-gray-800 dark:text-white">Benefits</h4>
-            <p class="text-gray-700 dark:text-gray-300">{{ jobResult.job.benefits }}</p>
-          </div>
-          
-          <div class="border-t border-gray-200 dark:border-gray-700 pt-4 grid grid-cols-2 gap-4">
-            <div *ngIf="jobResult.job.industry">
-              <h4 class="text-sm font-medium mb-1 text-gray-600 dark:text-gray-400">Industry</h4>
-              <p class="text-gray-800 dark:text-gray-200">{{ jobResult.job.industry }}</p>
-            </div>
-            
-            <div *ngIf="jobResult.job.employmentType">
-              <h4 class="text-sm font-medium mb-1 text-gray-600 dark:text-gray-400">Employment Type</h4>
-              <p class="text-gray-800 dark:text-gray-200">{{ jobResult.job.employmentType }}</p>
-            </div>
-            
-            <div *ngIf="jobResult.job.requiredExperience">
-              <h4 class="text-sm font-medium mb-1 text-gray-600 dark:text-gray-400">Experience</h4>
-              <p class="text-gray-800 dark:text-gray-200">{{ jobResult.job.requiredExperience }} years</p>
-            </div>
-            
-            <div *ngIf="jobResult.job.requiredEducation">
-              <h4 class="text-sm font-medium mb-1 text-gray-600 dark:text-gray-400">Education</h4>
-              <p class="text-gray-800 dark:text-gray-200">{{ jobResult.job.requiredEducation }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
       <!-- Analysis Result Card -->
       <div class="card">
         <div class="flex items-center mb-4">
@@ -115,13 +61,13 @@
             {{ jobResult.isFake ? 'Potential Fake Job Detected' : 'Job Appears Legitimate' }}
           </h2>
         </div>
-        
+
         <div class="p-4 mb-4 rounded-lg" [ngClass]="{'bg-green-50 dark:bg-green-900/20': !jobResult.isFake, 'bg-red-50 dark:bg-red-900/20': jobResult.isFake}">
           <p class="text-gray-800 dark:text-gray-200">
             {{ jobResult.message }}
           </p>
         </div>
-        
+
         <div *ngIf="jobResult.details" class="mt-6">
           <h3 class="text-lg font-medium mb-3 text-gray-800 dark:text-white">Analysis Details</h3>
           <div class="space-y-2">
@@ -131,6 +77,38 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup Notification -->
+  <div *ngIf="popup.show" class="fixed bottom-4 right-4 z-50">
+    <div [ngClass]="{
+      'bg-green-100 border-green-500 text-green-700 dark:bg-green-900 dark:border-green-600 dark:text-green-200': popup.type === 'success',
+      'bg-red-100 border-red-500 text-red-700 dark:bg-red-900 dark:border-red-600 dark:text-red-200': popup.type === 'error',
+      'bg-yellow-100 border-yellow-500 text-yellow-700 dark:bg-yellow-900 dark:border-yellow-600 dark:text-yellow-200': popup.type === 'warning'
+    }" class="border-l-4 p-4 max-w-sm rounded-lg shadow-lg">
+      <div class="flex justify-between items-start">
+        <div class="flex items-center">
+          <svg *ngIf="popup.type === 'success'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <svg *ngIf="popup.type === 'error'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <svg *ngIf="popup.type === 'warning'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <div>
+            <h3 class="font-bold">{{ popup.title }}</h3>
+            <p class="text-sm">{{ popup.message }}</p>
+          </div>
+        </div>
+        <button (click)="hidePopup()" class="ml-4 text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
     </div>
   </div>

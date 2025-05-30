@@ -123,3 +123,6 @@ body {
 .dark .tooltip-right::after {
   border-right-color: rgba(30, 41, 59, 0.95);
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

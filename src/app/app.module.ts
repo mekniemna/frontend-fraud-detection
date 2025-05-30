@@ -17,7 +17,8 @@ import { LoadingAnimationComponent } from './components/loading-animation/loadin
 import { TooltipDirective } from './directives/tooltip.directive';
 import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.component';
 import { SkeletonLoaderComponent } from './components/skeleton-loader/skeleton-loader.component';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTooltipModule } from '@angular/material/tooltip'; 
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,7 +40,9 @@ import { SkeletonLoaderComponent } from './components/skeleton-loader/skeleton-l
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    MatTooltipModule
   ],
   providers: [],
   bootstrap: [AppComponent]
